@@ -1,0 +1,199 @@
+{
+  "project_info": {
+    "project_number": "280246137278",
+    "firebase_url": "https://foodapp-af81f-default-rtdb.firebaseio.com",
+    "project_id": "foodapp-af81f",
+    "storage_bucket": "foodapp-af81f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280246137278:android:b2f26f1a92b96ae39909ef",
+        "android_client_info": {
+          "package_name": "com.cricket.karachicoaching"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280246137278-8f6ljff7sqmvbp3fsanlnn6oh39cdubn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cricket.karachicoaching",
+            "certificate_hash": "736757ed7aefb5d31bc5dbf4f9972ef8a70cc9cf"
+          }
+        },
+        {
+          "client_id": "280246137278-rmpnbsdiid1ul6hj0qf8vamn4p159b1u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWZuy0B6bw52XpZmWTXNC7gR9USZS0T7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280246137278-rmpnbsdiid1ul6hj0qf8vamn4p159b1u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "280246137278-8unu9k6ncio2oj5rrk3jdopg7lc970rq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cricket.karachicoaching"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280246137278:android:bc9f3e07ec4bb6ab9909ef",
+        "android_client_info": {
+          "package_name": "com.example.fitness"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280246137278-rmpnbsdiid1ul6hj0qf8vamn4p159b1u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWZuy0B6bw52XpZmWTXNC7gR9USZS0T7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280246137278-rmpnbsdiid1ul6hj0qf8vamn4p159b1u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "280246137278-8unu9k6ncio2oj5rrk3jdopg7lc970rq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cricket.karachicoaching"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280246137278:android:21bce5a36771baa09909ef",
+        "android_client_info": {
+          "package_name": "com.example.task_management"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280246137278-rmpnbsdiid1ul6hj0qf8vamn4p159b1u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWZuy0B6bw52XpZmWTXNC7gR9USZS0T7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280246137278-rmpnbsdiid1ul6hj0qf8vamn4p159b1u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "280246137278-8unu9k6ncio2oj5rrk3jdopg7lc970rq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cricket.karachicoaching"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280246137278:android:25daccdd1f1550d39909ef",
+        "android_client_info": {
+          "package_name": "com.hifah.foodapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280246137278-rmpnbsdiid1ul6hj0qf8vamn4p159b1u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWZuy0B6bw52XpZmWTXNC7gR9USZS0T7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280246137278-rmpnbsdiid1ul6hj0qf8vamn4p159b1u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "280246137278-8unu9k6ncio2oj5rrk3jdopg7lc970rq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cricket.karachicoaching"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280246137278:android:6fd7ffeab9f31ab29909ef",
+        "android_client_info": {
+          "package_name": "com.hifahtechnology.harmonized"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280246137278-rmpnbsdiid1ul6hj0qf8vamn4p159b1u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWZuy0B6bw52XpZmWTXNC7gR9USZS0T7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280246137278-rmpnbsdiid1ul6hj0qf8vamn4p159b1u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "280246137278-8unu9k6ncio2oj5rrk3jdopg7lc970rq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cricket.karachicoaching"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

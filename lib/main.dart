@@ -1,122 +1,178 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:fitness/features/chat/views/chat_list_screen.dart';
+import 'package:fitness/features/chat/views/chat_screen.dart';
+import 'package:fitness/features/plans/views/plan_details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'features/auth/services/auth_service.dart';
+import 'features/auth/views/login_screen.dart';
+import 'features/auth/views/signup_screen.dart';
+import 'features/profile/views/profile_setup_screen.dart';
+import 'features/profile/views/profile_view_edit_screen.dart';
+import 'features/dashboard/views/student_home_screen.dart';
+import 'features/dashboard/views/coach_home_screen.dart';
+import 'features/coach_discovery/views/coach_discovery_screen.dart';
+import 'features/coach_discovery/views/connection_management_screen.dart';
+import 'features/plans/views/create_plan_screen.dart';
+import 'features/plans/views/plans_screen.dart';
+import 'features/dashboard/views/my_students_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  Future<String> _getInitialRoute() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final authService = AuthService();
+        final userData = await authService.getUser(user.uid);
+        if (userData != null) {
+          if (userData.role == 'student') {
+            final profile =
+                await FirebaseFirestore.instance
+                    .collection('student_profiles')
+                    .doc(user.uid)
+                    .get();
+            if (profile.exists) return '/student-home';
+            return '/profile-setup';
+          } else if (userData.role == 'coach') {
+            final profile =
+                await FirebaseFirestore.instance
+                    .collection('coach_profiles')
+                    .doc(user.uid)
+                    .get();
+            if (profile.exists) return '/coach-home';
+            return '/profile-setup';
+          }
+        }
+      }
+      return '/login';
+    } catch (e) {
+      print('Error determining initial route: $e');
+      return '/login';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+    return FutureBuilder<String>(
+      future: _getInitialRoute(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const MaterialApp(
+            home: Scaffold(body: Center(child: CircularProgressIndicator())),
+          );
+        }
+
+        final initialRoute = snapshot.data ?? '/login';
+
+        return GetMaterialApp(
+          title: 'Fitness Coaching App',
+          theme: ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.dark,
+            scaffoldBackgroundColor:
+                Colors.transparent, // transparent so bg shows
+            primaryColor: Colors.white,
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.transparent,
+              foregroundColor: Colors.white, // Navy blue text/icons
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+            textTheme: const TextTheme(
+              headlineSmall: TextStyle(
+                color: Color.fromARGB(255, 231, 231, 231),
+                fontWeight: FontWeight.bold,
+              ),
+              titleLarge: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+              bodyMedium: TextStyle(color: Colors.white),
+              bodySmall: TextStyle(color: Colors.white),
+            ),
+            buttonTheme: const ButtonThemeData(
+              textTheme: ButtonTextTheme.primary,
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: const Color.fromARGB(
+                  255,
+                  244,
+                  245,
+                  246,
+                ), // Navy blue text
+                backgroundColor: const Color(
+                  0xFF2C3E50,
+                ), // Dark button background
+              ),
+            ),
+            cardTheme: const CardTheme(
+              color: Color(0xFF1C2526), // Dark card background
+            ),
+          ),
+          initialRoute: initialRoute,
+
+          /// 👇 This wraps all screens globally with your background
+          builder: (context, child) {
+            return Stack(
+              children: [
+                Positioned.fill(
+                  child: Image.asset(
+                    'assets/images/fitness_bg.jpeg',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.6), // Optional overlay
+                  ),
+                ),
+                child ?? const SizedBox.shrink(),
+              ],
+            );
+          },
+          getPages: [
+            GetPage(name: '/login', page: () => const LoginScreen()),
+            GetPage(name: '/signup', page: () => const SignUpScreen()),
+            GetPage(
+              name: '/profile-setup',
+              page: () => const ProfileSetupScreen(),
+            ),
+            GetPage(
+              name: '/profile-view-edit',
+              page: () => const ProfileViewEditScreen(),
+            ),
+            GetPage(
+              name: '/student-home',
+              page: () => const StudentHomeScreen(),
+            ),
+            GetPage(name: '/coach-home', page: () => const CoachHomeScreen()),
+            GetPage(
+              name: '/find-coach',
+              page: () => const CoachDiscoveryScreen(),
+            ),
+            GetPage(
+              name: '/manage-connections',
+              page: () => const ConnectionManagementScreen(),
+            ),
+            GetPage(name: '/plans', page: () => const PlansScreen()),
+            GetPage(name: '/my-students', page: () => const MyStudentsScreen()),
+            GetPage(name: '/create-plan', page: () => const CreatePlanScreen()),
+            GetPage(name: '/chat-list', page: () => const ChatListScreen()),
+            GetPage(name: '/chat', page: () => const ChatScreen()),
+                   GetPage(name: '/plan-details', page: () => const PlanDetailsScreen()),
+   ],
+          debugShowCheckedModeBanner: false,
+        );
+      },
     );
   }
 }
