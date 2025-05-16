@@ -61,4 +61,5 @@ class ConnectionService {
       throw Exception('Failed to fetch coach profiles: $e');
     }
   }
+
 }

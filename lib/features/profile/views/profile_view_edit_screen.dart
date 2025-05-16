@@ -173,19 +173,18 @@ class ProfileViewEditScreen extends StatelessWidget {
                             keyboardType: TextInputType.number,
                           ),
                           const SizedBox(height: 16),
-                          Obx(
-                            () => CustomDropdown(
-                              label: 'Specializations',
-                              items: AppConstants.specializations,
-                              selectedItems: _selectedSpecializations,
-                              onChanged: (updated) {
-                                _selectedSpecializations.value = updated;
-                                print(
-                                  'ProfileViewEditScreen: Specializations updated to $updated',
-                                );
-                              },
-                            ),
+                          CustomDropdown(
+                            label: 'Specializations',
+                            items: AppConstants.specializations,
+                            selectedItems: _selectedSpecializations,
+                            onChanged: (updated) {
+                              _selectedSpecializations.value = updated;
+                              print(
+                                'ProfileViewEditScreen: Specializations updated to $updated',
+                              );
+                            },
                           ),
+
                           const SizedBox(height: 16),
                           CustomTextField(
                             controller: _availabilityController,

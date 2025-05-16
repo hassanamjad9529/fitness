@@ -9,6 +9,9 @@ import '../models/student_profile_model.dart';
 import '../models/coach_profile_model.dart';
 import '../services/profile_service.dart';
 
+
+
+
 class ProfileController extends GetxController {
   final ProfileService _profileService = ProfileService();
   final AuthService _authService = AuthService();
@@ -20,6 +23,7 @@ class ProfileController extends GetxController {
   final Rx<StudentProfileModel?> studentProfile = Rx<StudentProfileModel?>(
     null,
   );
+
   final Rx<CoachProfileModel?> coachProfile = Rx<CoachProfileModel?>(null);
   final Rx<File?> profilePicture = Rx<File?>(null);
 
@@ -238,3 +242,6 @@ class ProfileController extends GetxController {
     }
   }
 }
+
+
+
