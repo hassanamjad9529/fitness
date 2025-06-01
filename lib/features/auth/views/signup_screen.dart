@@ -50,11 +50,11 @@ class SignUpScreen extends StatelessWidget {
                   value: controller.selectedRole.value,
                   items: const [
                     DropdownMenuItem(
-                      value: AppConstants.roleStudent,
+                      value: AppConstants1.roleStudent,
                       child: Text('Student'),
                     ),
                     DropdownMenuItem(
-                      value: AppConstants.roleCoach,
+                      value: AppConstants1.roleCoach,
                       child: Text('Coach'),
                     ),
                   ],
@@ -69,21 +69,22 @@ class SignUpScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Obx(
-                () => controller.isLoading.value
-                    ? const CircularProgressIndicator()
-                    : CustomButton(
-                        text: 'Sign Up',
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            controller.signUp(
-                              email: _emailController.text.trim(),
-                              password: _passwordController.text.trim(),
-                              name: _nameController.text.trim(),
-                              role: controller.selectedRole.value,
-                            );
-                          }
-                        },
-                      ),
+                () =>
+                    controller.isLoading.value
+                        ? const CircularProgressIndicator()
+                        : CustomButton(
+                          text: 'Sign Up',
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              controller.signUp(
+                                email: _emailController.text.trim(),
+                                password: _passwordController.text.trim(),
+                                name: _nameController.text.trim(),
+                                role: controller.selectedRole.value,
+                              );
+                            }
+                          },
+                        ),
               ),
               TextButton(
                 onPressed: () => Get.toNamed('/login'),

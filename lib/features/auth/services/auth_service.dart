@@ -14,10 +14,8 @@ class AuthService {
     required String role,
   }) async {
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
       User? user = userCredential.user;
       if (user != null) {
         UserModel userModel = UserModel(
@@ -28,7 +26,7 @@ class AuthService {
           createdAt: Timestamp.now(),
         );
         await _firestore
-            .collection(AppConstants.usersCollection)
+            .collection(AppConstants1.usersCollection)
             .doc(user.uid)
             .set(userModel.toMap());
       }
@@ -38,10 +36,7 @@ class AuthService {
     }
   }
 
-  Future<User?> login({
-    required String email,
-    required String password,
-  }) async {
+  Future<User?> login({required String email, required String password}) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -55,10 +50,11 @@ class AuthService {
 
   Future<UserModel?> getUser(String uid) async {
     try {
-      DocumentSnapshot doc = await _firestore
-          .collection(AppConstants.usersCollection)
-          .doc(uid)
-          .get();
+      DocumentSnapshot doc =
+          await _firestore
+              .collection(AppConstants1.usersCollection)
+              .doc(uid)
+              .get();
       if (doc.exists) {
         return UserModel.fromMap(uid, doc.data() as Map<String, dynamic>);
       }

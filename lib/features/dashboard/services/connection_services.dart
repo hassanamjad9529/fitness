@@ -13,13 +13,16 @@ class ConnectionService {
       if (currentUser == null) throw Exception('No user logged in');
 
       final connectionId = '${currentUser.uid}_$coachId';
-      await _firestore.collection(AppConstants.connectionsCollection).doc(connectionId).set({
-        'connectionId': connectionId,
-        'studentId': currentUser.uid,
-        'coachId': coachId,
-        'status': 'pending',
-        'createdAt': Timestamp.now(),
-      }, SetOptions(merge: true));
+      await _firestore
+          .collection(AppConstants1.connectionsCollection)
+          .doc(connectionId)
+          .set({
+            'connectionId': connectionId,
+            'studentId': currentUser.uid,
+            'coachId': coachId,
+            'status': 'pending',
+            'createdAt': Timestamp.now(),
+          }, SetOptions(merge: true));
     } catch (e) {
       print('ConnectionService: Error sending connection request: $e');
       throw Exception('Failed to send connection request: $e');
@@ -33,24 +36,32 @@ class ConnectionService {
       if (currentUser == null) throw Exception('No user logged in');
 
       final connectionId = '${currentUser.uid}_$coachId';
-      await _firestore.collection(AppConstants.connectionsCollection).doc(connectionId).delete();
+      await _firestore
+          .collection(AppConstants1.connectionsCollection)
+          .doc(connectionId)
+          .delete();
     } catch (e) {
       print('ConnectionService: Error disconnecting: $e');
       throw Exception('Failed to disconnect: $e');
     }
   }
-  
+
   // Fetch Coach profiles with names
   Future<List<CoachProfileModel>> getCoachProfiles() async {
     try {
       final coachProfilesSnapshot =
-          await _firestore.collection(AppConstants.coachProfilesCollection).get();
+          await _firestore
+              .collection(AppConstants1.coachProfilesCollection)
+              .get();
       final List<CoachProfileModel> coachProfiles = [];
 
       for (var doc in coachProfilesSnapshot.docs) {
         final userId = doc.data()['userId'] as String;
         final userDoc =
-            await _firestore.collection(AppConstants.usersCollection).doc(userId).get();
+            await _firestore
+                .collection(AppConstants1.usersCollection)
+                .doc(userId)
+                .get();
         final userName = userDoc.data()?['name'] as String? ?? 'Unknown';
         coachProfiles.add(CoachProfileModel.fromMap(doc.data(), userName));
       }
@@ -61,5 +72,4 @@ class ConnectionService {
       throw Exception('Failed to fetch coach profiles: $e');
     }
   }
-
 }

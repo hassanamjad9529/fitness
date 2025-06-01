@@ -29,7 +29,7 @@ class ProfileViewEditScreen extends StatelessWidget {
       print(
         'ProfileViewEditScreen: Initializing fields for role ${controller.user.value?.role}',
       );
-      if (controller.user.value?.role == AppConstants.roleStudent &&
+      if (controller.user.value?.role == AppConstants1.roleStudent &&
           controller.studentProfile.value != null) {
         _heightController.text =
             controller.studentProfile.value!.height.toString();
@@ -45,7 +45,7 @@ class ProfileViewEditScreen extends StatelessWidget {
         print(
           'ProfileViewEditScreen: Student profile initialized - height: ${_heightController.text}, fitnessGoal: ${_selectedFitnessGoal.value}',
         );
-      } else if (controller.user.value?.role == AppConstants.roleCoach &&
+      } else if (controller.user.value?.role == AppConstants1.roleCoach &&
           controller.coachProfile.value != null) {
         _qualificationsController.text =
             controller.coachProfile.value!.qualifications;
@@ -84,7 +84,7 @@ class ProfileViewEditScreen extends StatelessWidget {
                         ProfilePicturePicker(),
                         const SizedBox(height: 16),
                         if (controller.user.value?.role ==
-                            AppConstants.roleStudent) ...[
+                            AppConstants1.roleStudent) ...[
                           CustomTextField(
                             controller: _heightController,
                             label: 'Height (cm)',
@@ -113,7 +113,7 @@ class ProfileViewEditScreen extends StatelessWidget {
                                       ? null
                                       : _selectedFitnessGoal.value,
                               items:
-                                  AppConstants.fitnessGoals
+                                  AppConstants1.fitnessGoals
                                       .map(
                                         (goal) => DropdownMenuItem(
                                           value: goal,
@@ -159,7 +159,7 @@ class ProfileViewEditScreen extends StatelessWidget {
                             maxLines: 3,
                           ),
                         ] else if (controller.user.value?.role ==
-                            AppConstants.roleCoach) ...[
+                            AppConstants1.roleCoach) ...[
                           CustomTextField(
                             controller: _qualificationsController,
                             label: 'Qualifications',
@@ -175,7 +175,7 @@ class ProfileViewEditScreen extends StatelessWidget {
                           const SizedBox(height: 16),
                           CustomDropdown(
                             label: 'Specializations',
-                            items: AppConstants.specializations,
+                            items: AppConstants1.specializations,
                             selectedItems: _selectedSpecializations,
                             onChanged: (updated) {
                               _selectedSpecializations.value = updated;
@@ -203,7 +203,7 @@ class ProfileViewEditScreen extends StatelessWidget {
                             );
                             if (_formKey.currentState!.validate()) {
                               if (controller.user.value?.role ==
-                                  AppConstants.roleStudent) {
+                                  AppConstants1.roleStudent) {
                                 controller.updateStudentProfile(
                                   height: double.parse(_heightController.text),
                                   weight: double.parse(_weightController.text),
@@ -221,7 +221,7 @@ class ProfileViewEditScreen extends StatelessWidget {
                                   image: controller.profilePicture.value,
                                 );
                               } else if (controller.user.value?.role ==
-                                  AppConstants.roleCoach) {
+                                  AppConstants1.roleCoach) {
                                 controller.updateCoachProfile(
                                   qualifications:
                                       _qualificationsController.text,

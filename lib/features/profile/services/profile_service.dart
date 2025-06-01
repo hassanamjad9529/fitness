@@ -12,7 +12,7 @@ class ProfileService {
   Future<void> createStudentProfile(StudentProfileModel profile) async {
     try {
       await _firestore
-          .collection(AppConstants.studentProfilesCollection)
+          .collection(AppConstants1.studentProfilesCollection)
           .doc(profile.userId)
           .set(profile.toMap());
     } catch (e) {
@@ -23,7 +23,7 @@ class ProfileService {
   Future<void> createCoachProfile(CoachProfileModel profile) async {
     try {
       await _firestore
-          .collection(AppConstants.coachProfilesCollection)
+          .collection(AppConstants1.coachProfilesCollection)
           .doc(profile.userId)
           .set(profile.toMap());
     } catch (e) {
@@ -35,7 +35,7 @@ class ProfileService {
     try {
       DocumentSnapshot doc =
           await _firestore
-              .collection(AppConstants.studentProfilesCollection)
+              .collection(AppConstants1.studentProfilesCollection)
               .doc(userId)
               .get();
       if (doc.exists) {
@@ -51,11 +51,14 @@ class ProfileService {
     try {
       DocumentSnapshot doc =
           await _firestore
-              .collection(AppConstants.coachProfilesCollection)
+              .collection(AppConstants1.coachProfilesCollection)
               .doc(userId)
               .get();
       if (doc.exists) {
-        return CoachProfileModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+        return CoachProfileModel.fromMap(
+          doc.data() as Map<String, dynamic>,
+          doc.id,
+        );
       }
       return null;
     } catch (e) {
@@ -66,7 +69,7 @@ class ProfileService {
   Future<void> updateStudentProfile(StudentProfileModel profile) async {
     try {
       await _firestore
-          .collection(AppConstants.studentProfilesCollection)
+          .collection(AppConstants1.studentProfilesCollection)
           .doc(profile.userId)
           .update(profile.toMap());
     } catch (e) {
@@ -77,7 +80,7 @@ class ProfileService {
   Future<void> updateCoachProfile(CoachProfileModel profile) async {
     try {
       await _firestore
-          .collection(AppConstants.coachProfilesCollection)
+          .collection(AppConstants1.coachProfilesCollection)
           .doc(profile.userId)
           .update(profile.toMap());
     } catch (e) {

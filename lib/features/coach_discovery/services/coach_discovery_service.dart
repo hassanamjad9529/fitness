@@ -10,12 +10,14 @@ class CoachDiscoveryService {
     try {
       QuerySnapshot query =
           await _firestore
-              .collection(AppConstants.coachProfilesCollection)
+              .collection(AppConstants1.coachProfilesCollection)
               .get();
       return query.docs
           .map(
-            (doc) =>
-                CoachProfileModel.fromMap(doc.data() as Map<String, dynamic>, doc.id),
+            (doc) => CoachProfileModel.fromMap(
+              doc.data() as Map<String, dynamic>,
+              doc.id,
+            ),
           )
           .toList();
     } catch (e) {
@@ -30,7 +32,7 @@ class CoachDiscoveryService {
     try {
       QuerySnapshot query =
           await _firestore
-              .collection(AppConstants.connectionsCollection)
+              .collection(AppConstants1.connectionsCollection)
               .where('studentId', isEqualTo: studentId)
               .where('coachId', isEqualTo: coachId)
               .limit(1)
@@ -53,11 +55,11 @@ class CoachDiscoveryService {
         id: '${studentId}_$coachId',
         studentId: studentId,
         coachId: coachId,
-        status: AppConstants.connectionStatusPending,
+        status: AppConstants1.connectionStatusPending,
         createdAt: Timestamp.now(),
       );
       await _firestore
-          .collection(AppConstants.connectionsCollection)
+          .collection(AppConstants1.connectionsCollection)
           .doc(connection.id)
           .set(connection.toMap());
     } catch (e) {

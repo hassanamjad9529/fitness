@@ -28,10 +28,20 @@ class ConnectionManagementController extends GetxController {
         Get.offAllNamed('/login');
         return;
       }
-      pendingConnections.value = await _dashboardService.getPendingConnectionsForCoach(currentUser.uid);
-      acceptedConnections.value = await _dashboardService.getAcceptedConnectionsForCoach(currentUser.uid);
-      rejectedConnections.value = await _dashboardService.getConnectionsByStatus(currentUser.uid, AppConstants.connectionStatusRejected);
-      for (var connection in [...pendingConnections, ...acceptedConnections, ...rejectedConnections]) {
+      pendingConnections.value = await _dashboardService
+          .getPendingConnectionsForCoach(currentUser.uid);
+      acceptedConnections.value = await _dashboardService
+          .getAcceptedConnectionsForCoach(currentUser.uid);
+      rejectedConnections.value = await _dashboardService
+          .getConnectionsByStatus(
+            currentUser.uid,
+            AppConstants1.connectionStatusRejected,
+          );
+      for (var connection in [
+        ...pendingConnections,
+        ...acceptedConnections,
+        ...rejectedConnections,
+      ]) {
         final student = await _dashboardService.getUser(connection.studentId);
         if (student != null) {
           studentDetails[connection.studentId] = student;
@@ -47,7 +57,10 @@ class ConnectionManagementController extends GetxController {
   Future<void> acceptConnection(String connectionId) async {
     try {
       isLoading.value = true;
-      await _dashboardService.updateConnectionStatus(connectionId, AppConstants.connectionStatusAccepted);
+      await _dashboardService.updateConnectionStatus(
+        connectionId,
+        AppConstants1.connectionStatusAccepted,
+      );
       await loadConnections();
       Get.snackbar('Success', 'Connection accepted');
     } catch (e) {
@@ -60,7 +73,10 @@ class ConnectionManagementController extends GetxController {
   Future<void> rejectConnection(String connectionId) async {
     try {
       isLoading.value = true;
-      await _dashboardService.updateConnectionStatus(connectionId, AppConstants.connectionStatusRejected);
+      await _dashboardService.updateConnectionStatus(
+        connectionId,
+        AppConstants1.connectionStatusRejected,
+      );
       await loadConnections();
       Get.snackbar('Success', 'Connection rejected');
     } catch (e) {

@@ -17,16 +17,18 @@ class ChatListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Chats')),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection(AppConstants.chatRoomsCollection)
-            .where('studentId', isEqualTo: currentUser?.uid)
-            .snapshots(),
+        stream:
+            FirebaseFirestore.instance
+                .collection(AppConstants1.chatRoomsCollection)
+                .where('studentId', isEqualTo: currentUser?.uid)
+                .snapshots(),
         builder: (context, studentSnapshot) {
           return StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection(AppConstants.chatRoomsCollection)
-                .where('coachId', isEqualTo: currentUser?.uid)
-                .snapshots(),
+            stream:
+                FirebaseFirestore.instance
+                    .collection(AppConstants1.chatRoomsCollection)
+                    .where('coachId', isEqualTo: currentUser?.uid)
+                    .snapshots(),
             builder: (context, coachSnapshot) {
               if (studentSnapshot.connectionState == ConnectionState.waiting ||
                   coachSnapshot.connectionState == ConnectionState.waiting) {
@@ -45,29 +47,37 @@ class ChatListScreen extends StatelessWidget {
               return ListView.builder(
                 itemCount: chatRooms.length,
                 itemBuilder: (context, index) {
-                  final chatRoom = chatRooms[index].data() as Map<String, dynamic>;
+                  final chatRoom =
+                      chatRooms[index].data() as Map<String, dynamic>;
                   final studentId = chatRoom['studentId'] as String;
                   final coachId = chatRoom['coachId'] as String;
                   final lastMessage = chatRoom['lastMessage'] as String?;
-                  final lastMessageTime = (chatRoom['lastMessageTime'] as Timestamp?)?.toDate();
+                  final lastMessageTime =
+                      (chatRoom['lastMessageTime'] as Timestamp?)?.toDate();
 
                   return FutureBuilder<UserModel?>(
-                    future: authService.getUser(currentUser!.uid == studentId ? coachId : studentId),
+                    future: authService.getUser(
+                      currentUser!.uid == studentId ? coachId : studentId,
+                    ),
                     builder: (context, snapshot) {
                       final otherUser = snapshot.data;
                       return ListTile(
                         title: Text(otherUser?.name ?? 'Unknown'),
                         subtitle: Text(lastMessage ?? 'No messages yet'),
-                        trailing: lastMessageTime != null
-                            ? Text(
-                                '${lastMessageTime.hour}:${lastMessageTime.minute.toString().padLeft(2, '0')}',
-                              )
-                            : null,
+                        trailing:
+                            lastMessageTime != null
+                                ? Text(
+                                  '${lastMessageTime.hour}:${lastMessageTime.minute.toString().padLeft(2, '0')}',
+                                )
+                                : null,
                         onTap: () {
-                          Get.toNamed('/chat', arguments: {
-                            'studentId': studentId,
-                            'coachId': coachId,
-                          });
+                          Get.toNamed(
+                            '/chat',
+                            arguments: {
+                              'studentId': studentId,
+                              'coachId': coachId,
+                            },
+                          );
                         },
                       );
                     },

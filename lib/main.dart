@@ -1,191 +1,181 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitness/features/auth/controllers/auth_controller.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:fitness/features/chat/views/chat_list_screen.dart';
-import 'package:fitness/features/coach_discovery/views/connection_management_screen.dart';
-import 'package:fitness/features/dashboard/controllers/dashboard_controller.dart';
-import 'package:fitness/features/profile/views/profile_view_edit_screen.dart';
+import 'package:fitness/features/chat/views/chat_screen.dart';
+import 'package:fitness/features/plans/views/plan_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'features/auth/services/auth_service.dart';
+import 'features/auth/views/login_screen.dart';
+import 'features/auth/views/signup_screen.dart';
+import 'features/profile/views/profile_setup_screen.dart';
+import 'features/profile/views/profile_view_edit_screen.dart';
+import 'features/dashboard/views/student_home_screen.dart';
+import 'features/dashboard/views/coach_home_screen.dart';
+import 'features/coach_discovery/views/coach_discovery_screen.dart';
+import 'features/coach_discovery/views/connection_management_screen.dart';
+import 'features/plans/views/create_plan_screen.dart';
+import 'features/plans/views/plans_screen.dart';
+import 'features/dashboard/views/my_students_screen.dart';
 
-class CoachHomeScreen extends StatefulWidget {
-  const CoachHomeScreen({super.key});
-
-  @override
-  State<CoachHomeScreen> createState() => _CoachHomeScreenState();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
 }
 
-class _CoachHomeScreenState extends State<CoachHomeScreen> {
-  final DashboardController controller = Get.put(DashboardController());
-  final AuthController authController = Get.put(AuthController());
-  final currentUser = FirebaseAuth.instance.currentUser;
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-  int _selectedIndex = 0;
-
-  // These are the pages shown based on the bottom nav index
-  final List<Widget> _pages = [
-    _DashboardTab(),
-    const ChatListScreen(),
-    const ConnectionManagementScreen(),
-    const ProfileViewEditScreen(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  Future<String> _getInitialRoute() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final authService = AuthService();
+        final userData = await authService.getUser(user.uid);
+        if (userData != null) {
+          if (userData.role == 'student') {
+            final profile =
+                await FirebaseFirestore.instance
+                    .collection('student_profiles')
+                    .doc(user.uid)
+                    .get();
+            if (profile.exists) return '/student-home';
+            return '/profile-setup';
+          } else if (userData.role == 'coach') {
+            final profile =
+                await FirebaseFirestore.instance
+                    .collection('coach_profiles')
+                    .doc(user.uid)
+                    .get();
+            if (profile.exists) return '/coach-home';
+            return '/profile-setup';
+          }
+        }
+      }
+      return '/login';
+    } catch (e) {
+      print('Error determining initial route: $e');
+      return '/login';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Coach Dashboard'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => authController.signOut(),
-          ),
-        ],
-      ),
+    return FutureBuilder<String>(
+      future: _getInitialRoute(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const MaterialApp(
+            home: Scaffold(body: Center(child: CircularProgressIndicator())),
+          );
+        }
 
-      // IndexedStack keeps state of all tabs alive
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
-      ),
+        final initialRoute = snapshot.data ?? '/login';
 
-      // Bottom navigation bar
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        selectedItemColor: Colors.blueAccent,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color(0xFF1C2526),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
+        return GetMaterialApp(
+          title: 'Fitness Coaching App',
+          theme: ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.dark,
+            scaffoldBackgroundColor:
+                Colors.transparent, // transparent so bg shows
+            primaryColor: Colors.white,
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.transparent,
+              foregroundColor: Colors.white, // Navy blue text/icons
+            ),
+            textTheme: const TextTheme(
+              headlineSmall: TextStyle(
+                color: Color.fromARGB(255, 231, 231, 231),
+                fontWeight: FontWeight.bold,
+              ),
+              titleLarge: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+              bodyMedium: TextStyle(color: Colors.white),
+              bodySmall: TextStyle(color: Colors.white),
+            ),
+            buttonTheme: const ButtonThemeData(
+              textTheme: ButtonTextTheme.primary,
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: const Color.fromARGB(
+                  255,
+                  244,
+                  245,
+                  246,
+                ), // Navy blue text
+                backgroundColor: const Color(
+                  0xFF2C3E50,
+                ), // Dark button background
+              ),
+            ),
+            cardTheme: const CardTheme(
+              color: Color(0xFF1C2526), // Dark card background
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Connections',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
-    );
-  }
-  
-}
-class _DashboardTab extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final DashboardController controller = Get.find();
-    final currentUser = FirebaseAuth.instance.currentUser;
+          initialRoute: initialRoute,
 
-    return Obx(() => controller.isLoading.value
-        ? const Center(child: CircularProgressIndicator())
-        : SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          /// 👇 This wraps all screens globally with your background
+          builder: (context, child) {
+            return Stack(
               children: [
-                // Profile Summary
-                Card(
-                  elevation: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundImage: controller.user.value?.profilePicture != null
-                              ? NetworkImage(controller.user.value!.profilePicture!)
-                              : null,
-                          child: controller.user.value?.profilePicture == null
-                              ? Text(controller.user.value?.name[0] ?? 'U')
-                              : null,
-                        ),
-                        const SizedBox(width: 16),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Welcome, ${controller.user.value?.name ?? ''}',
-                              style: Theme.of(context).textTheme.headlineSmall,
-                            ),
-                            Text(
-                              controller.user.value?.email ?? '',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                Positioned.fill(
+                  child: Image.asset(
+                    'assets/images/fitness_bg.jpeg',
+                    fit: BoxFit.cover,
                   ),
                 ),
-                const SizedBox(height: 16),
-
-                // Connected Students
-                Text(
-                  'My Students',
-                  style: Theme.of(context).textTheme.titleLarge,
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.6), // Optional overlay
+                  ),
                 ),
-                const SizedBox(height: 8),
-                Obx(() {
-                  if (controller.connectedStudents.isEmpty) {
-                    return const Text('No students connected');
-                  }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.connectedStudents.length,
-                    itemBuilder: (context, index) {
-                      final student = controller.connectedStudents[index];
-                      return Card(
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: student.profilePicture != null
-                                ? NetworkImage(student.profilePicture!)
-                                : null,
-                            child: student.profilePicture == null
-                                ? Text(student.name[0])
-                                : null,
-                          ),
-                          title: Text(student.name),
-                          subtitle: Text(student.email),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.chat),
-                            onPressed: () {
-                              if (currentUser != null) {
-                                Get.toNamed(
-                                  '/chat',
-                                  arguments: {
-                                    'studentId': student.id,
-                                    'coachId': currentUser.uid,
-                                  },
-                                );
-                              } else {
-                                Get.snackbar('Error', 'Please log in to chat');
-                              }
-                            },
-                          ),
-                          onTap: () => Get.toNamed('/my-students'),
-                        ),
-                      );
-                    },
-                  );
-                }),
+                child ?? const SizedBox.shrink(),
               ],
+            );
+          },
+          getPages: [
+            GetPage(name: '/login', page: () => const LoginScreen()),
+            GetPage(name: '/signup', page: () => const SignUpScreen()),
+            GetPage(
+              name: '/profile-setup',
+              page: () => const ProfileSetupScreen(),
             ),
-          ));
+            GetPage(
+              name: '/profile-view-edit',
+              page: () => const ProfileViewEditScreen(),
+            ),
+            GetPage(
+              name: '/student-home',
+              page: () => const StudentHomeScreen(),
+            ),
+            GetPage(name: '/coach-home', page: () => const CoachHomeScreen()),
+            GetPage(
+              name: '/find-coach',
+              page: () => const CoachDiscoveryScreen(),
+            ),
+            GetPage(
+              name: '/manage-connections',
+              page: () => const ConnectionManagementScreen(),
+            ),
+            GetPage(name: '/plans', page: () => const PlansScreen()),
+            GetPage(name: '/my-students', page: () => const MyStudentsScreen()),
+            GetPage(name: '/create-plan', page: () => const CreatePlanScreen()),
+            GetPage(name: '/chat-list', page: () => const ChatListScreen()),
+            GetPage(name: '/chat', page: () => const ChatScreen()),
+            GetPage(
+              name: '/plan-details',
+              page: () => const PlanDetailsScreen(),
+            ),
+          ],
+          debugShowCheckedModeBanner: false,
+        );
+      },
+    );
   }
 }

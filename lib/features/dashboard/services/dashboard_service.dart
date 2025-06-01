@@ -13,10 +13,11 @@ class DashboardService {
 
   Future<UserModel?> getUser(String userId) async {
     try {
-      DocumentSnapshot doc = await _firestore
-          .collection(AppConstants.usersCollection)
-          .doc(userId)
-          .get();
+      DocumentSnapshot doc =
+          await _firestore
+              .collection(AppConstants1.usersCollection)
+              .doc(userId)
+              .get();
       if (doc.exists) {
         return UserModel.fromMap(userId, doc.data() as Map<String, dynamic>);
       }
@@ -26,80 +27,122 @@ class DashboardService {
     }
   }
 
-  Future<ConnectionModel?> getActiveConnectionForStudent(String studentId) async {
+  Future<ConnectionModel?> getActiveConnectionForStudent(
+    String studentId,
+  ) async {
     try {
-      QuerySnapshot query = await _firestore
-          .collection(AppConstants.connectionsCollection)
-          .where('studentId', isEqualTo: studentId)
-          .where('status', isEqualTo: 'accepted')
-          .limit(1)
-          .get();
+      QuerySnapshot query =
+          await _firestore
+              .collection(AppConstants1.connectionsCollection)
+              .where('studentId', isEqualTo: studentId)
+              .where('status', isEqualTo: 'accepted')
+              .limit(1)
+              .get();
       if (query.docs.isNotEmpty) {
         return ConnectionModel.fromMap(
-            query.docs.first.id, query.docs.first.data() as Map<String, dynamic>);
+          query.docs.first.id,
+          query.docs.first.data() as Map<String, dynamic>,
+        );
       }
       return null;
     } catch (e) {
-      if (e.toString().contains('failed-precondition') && e.toString().contains('requires an index')) {
+      if (e.toString().contains('failed-precondition') &&
+          e.toString().contains('requires an index')) {
         print('Index required for getActiveConnectionForStudent: $e');
-        throw Exception('Unable to load connections. Please contact support to enable required database index.');
+        throw Exception(
+          'Unable to load connections. Please contact support to enable required database index.',
+        );
       }
       rethrow;
     }
   }
 
-  Future<List<ConnectionModel>> getPendingConnectionsForCoach(String coachId) async {
+  Future<List<ConnectionModel>> getPendingConnectionsForCoach(
+    String coachId,
+  ) async {
     try {
-      QuerySnapshot query = await _firestore
-          .collection(AppConstants.connectionsCollection)
-          .where('coachId', isEqualTo: coachId)
-          .where('status', isEqualTo: 'pending')
-          .get();
+      QuerySnapshot query =
+          await _firestore
+              .collection(AppConstants1.connectionsCollection)
+              .where('coachId', isEqualTo: coachId)
+              .where('status', isEqualTo: 'pending')
+              .get();
       return query.docs
-          .map((doc) => ConnectionModel.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+          .map(
+            (doc) => ConnectionModel.fromMap(
+              doc.id,
+              doc.data() as Map<String, dynamic>,
+            ),
+          )
           .toList();
     } catch (e) {
-      if (e.toString().contains('failed-precondition') && e.toString().contains('requires an index')) {
+      if (e.toString().contains('failed-precondition') &&
+          e.toString().contains('requires an index')) {
         print('Index required for getPendingConnectionsForCoach: $e');
-        throw Exception('Unable to load pending connections. Please contact support to enable required database index.');
+        throw Exception(
+          'Unable to load pending connections. Please contact support to enable required database index.',
+        );
       }
       rethrow;
     }
   }
 
-  Future<List<ConnectionModel>> getAcceptedConnectionsForCoach(String coachId) async {
+  Future<List<ConnectionModel>> getAcceptedConnectionsForCoach(
+    String coachId,
+  ) async {
     try {
-      QuerySnapshot query = await _firestore
-          .collection(AppConstants.connectionsCollection)
-          .where('coachId', isEqualTo: coachId)
-          .where('status', isEqualTo: 'accepted')
-          .get();
+      QuerySnapshot query =
+          await _firestore
+              .collection(AppConstants1.connectionsCollection)
+              .where('coachId', isEqualTo: coachId)
+              .where('status', isEqualTo: 'accepted')
+              .get();
       return query.docs
-          .map((doc) => ConnectionModel.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+          .map(
+            (doc) => ConnectionModel.fromMap(
+              doc.id,
+              doc.data() as Map<String, dynamic>,
+            ),
+          )
           .toList();
     } catch (e) {
-      if (e.toString().contains('failed-precondition') && e.toString().contains('requires an index')) {
+      if (e.toString().contains('failed-precondition') &&
+          e.toString().contains('requires an index')) {
         print('Index required for getAcceptedConnectionsForCoach: $e');
-        throw Exception('Unable to load accepted connections. Please contact support to enable required database index.');
+        throw Exception(
+          'Unable to load accepted connections. Please contact support to enable required database index.',
+        );
       }
       rethrow;
     }
   }
 
-  Future<List<ConnectionModel>> getConnectionsByStatus(String coachId, String status) async {
+  Future<List<ConnectionModel>> getConnectionsByStatus(
+    String coachId,
+    String status,
+  ) async {
     try {
-      QuerySnapshot query = await _firestore
-          .collection(AppConstants.connectionsCollection)
-          .where('coachId', isEqualTo: coachId)
-          .where('status', isEqualTo: status)
-          .get();
+      QuerySnapshot query =
+          await _firestore
+              .collection(AppConstants1.connectionsCollection)
+              .where('coachId', isEqualTo: coachId)
+              .where('status', isEqualTo: status)
+              .get();
       return query.docs
-          .map((doc) => ConnectionModel.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+          .map(
+            (doc) => ConnectionModel.fromMap(
+              doc.id,
+              doc.data() as Map<String, dynamic>,
+            ),
+          )
           .toList();
     } catch (e) {
-      if (e.toString().contains('failed-precondition') && e.toString().contains('requires an index')) {
+      if (e.toString().contains('failed-precondition') &&
+          e.toString().contains('requires an index')) {
         print('Index required for getConnectionsByStatus: $e');
-        throw Exception('Unable to load connections. Please contact support to enable required database index.');
+        throw Exception(
+          'Unable to load connections. Please contact support to enable required database index.',
+        );
       }
       rethrow;
     }
@@ -107,11 +150,12 @@ class DashboardService {
 
   Future<List<PlanModel>> getPlansForStudent(String studentId) async {
     try {
-      final snapshot = await _firestore
-          .collection(AppConstants.plansCollection)
-          .where('studentId', isEqualTo: studentId)
-          .orderBy('createdAt', descending: true)
-          .get();
+      final snapshot =
+          await _firestore
+              .collection(AppConstants1.plansCollection)
+              .where('studentId', isEqualTo: studentId)
+              .orderBy('createdAt', descending: true)
+              .get();
       return snapshot.docs
           .map((doc) => PlanModel.fromMap(doc.id, doc.data()))
           .toList();
@@ -123,16 +167,21 @@ class DashboardService {
 
   Future<PlanModel?> getLatestPlanForStudent(String studentId) async {
     try {
-      print('getLatestPlanForStudent: Querying latest plan for studentId: $studentId');
-      QuerySnapshot query = await _firestore
-          .collection(AppConstants.plansCollection)
-          .where('studentId', isEqualTo: studentId)
-          .orderBy('createdAt', descending: true)
-          .limit(1)
-          .get();
+      print(
+        'getLatestPlanForStudent: Querying latest plan for studentId: $studentId',
+      );
+      QuerySnapshot query =
+          await _firestore
+              .collection(AppConstants1.plansCollection)
+              .where('studentId', isEqualTo: studentId)
+              .orderBy('createdAt', descending: true)
+              .limit(1)
+              .get();
       if (query.docs.isNotEmpty) {
         final plan = PlanModel.fromMap(
-            query.docs.first.id, query.docs.first.data() as Map<String, dynamic>);
+          query.docs.first.id,
+          query.docs.first.data() as Map<String, dynamic>,
+        );
         print('getLatestPlanForStudent: Found plan ${plan.id}');
         return plan;
       }
@@ -140,14 +189,18 @@ class DashboardService {
       return null;
     } catch (e) {
       print('getLatestPlanForStudent: Error: $e');
-      if (e.toString().contains('failed-precondition') && e.toString().contains('requires an index')) {
+      if (e.toString().contains('failed-precondition') &&
+          e.toString().contains('requires an index')) {
         print('Index required for getLatestPlanForStudent: $e');
-        throw Exception('Unable to load plans. Please contact support to enable required database index.');
+        throw Exception(
+          'Unable to load plans. Please contact support to enable required database index.',
+        );
       }
       rethrow;
     }
   }
- Future<void> createPlan({
+
+  Future<void> createPlan({
     required String coachId,
     required String studentId,
     required String type,
@@ -159,15 +212,16 @@ class DashboardService {
     required List<File> mediaFiles,
   }) async {
     try {
-      final planId = _firestore.collection(AppConstants.plansCollection).doc().id;
+      final planId =
+          _firestore.collection(AppConstants1.plansCollection).doc().id;
       final List<Map<String, String>> media = [];
 
       // Upload media to Firebase Storage
       for (var file in mediaFiles) {
         final fileName = file.path.split('/').last;
-        final storageRef = _storage
-            .ref()
-            .child('plan_media/$planId/${DateTime.now().millisecondsSinceEpoch}_$fileName');
+        final storageRef = _storage.ref().child(
+          'plan_media/$planId/${DateTime.now().millisecondsSinceEpoch}_$fileName',
+        );
         await storageRef.putFile(file);
         final url = await storageRef.getDownloadURL();
         final type = fileName.endsWith('.mp4') ? 'video' : 'image';
@@ -190,7 +244,7 @@ class DashboardService {
       );
 
       await _firestore
-          .collection(AppConstants.plansCollection)
+          .collection(AppConstants1.plansCollection)
           .doc(planId)
           .set(plan.toMap());
     } catch (e) {
@@ -198,15 +252,19 @@ class DashboardService {
       throw Exception('Failed to create plan: $e');
     }
   }
-  Future<void> updateConnectionStatus(String connectionId, String status) async {
+
+  Future<void> updateConnectionStatus(
+    String connectionId,
+    String status,
+  ) async {
     try {
       await _firestore
-          .collection(AppConstants.connectionsCollection)
+          .collection(AppConstants1.connectionsCollection)
           .doc(connectionId)
           .update({
-        'status': status,
-        'acceptedAt': status == 'accepted' ? Timestamp.now() : null,
-      });
+            'status': status,
+            'acceptedAt': status == 'accepted' ? Timestamp.now() : null,
+          });
     } catch (e) {
       rethrow;
     }

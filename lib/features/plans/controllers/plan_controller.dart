@@ -12,7 +12,7 @@ class PlanController extends GetxController {
   final DashboardService _dashboardService = DashboardService();
   final RxBool isLoading = false.obs;
   final RxList<PlanModel> plans = <PlanModel>[].obs;
-  final RxString selectedPlanType = AppConstants.planTypeDiet.obs;
+  final RxString selectedPlanType = AppConstants1.planTypeDiet.obs;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController durationController = TextEditingController();
@@ -38,10 +38,15 @@ class PlanController extends GetxController {
       print('PlanController: Loaded ${plans.length} plans');
     } catch (e) {
       print('PlanController: Error loading plans: $e');
-      errorMessage.value = e.toString().contains('failed-precondition')
-          ? 'Unable to load plans due to a database configuration issue. Please try again later or contact support.'
-          : 'Failed to load plans: $e';
-      Get.snackbar('Error', errorMessage.value, duration: const Duration(seconds: 5));
+      errorMessage.value =
+          e.toString().contains('failed-precondition')
+              ? 'Unable to load plans due to a database configuration issue. Please try again later or contact support.'
+              : 'Failed to load plans: $e';
+      Get.snackbar(
+        'Error',
+        errorMessage.value,
+        duration: const Duration(seconds: 5),
+      );
     } finally {
       isLoading.value = false;
     }
@@ -54,7 +59,11 @@ class PlanController extends GetxController {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) {
         print('No user logged in');
-        Get.snackbar('Error', 'Please log in to create a plan', duration: const Duration(seconds: 3));
+        Get.snackbar(
+          'Error',
+          'Please log in to create a plan',
+          duration: const Duration(seconds: 3),
+        );
         Get.offAllNamed('/login');
         return;
       }
@@ -64,14 +73,22 @@ class PlanController extends GetxController {
           durationController.text.isEmpty ||
           selectedGoals.isEmpty) {
         print('Validation failed: required fields empty');
-        Get.snackbar('Error', 'Please fill in all required fields', duration: const Duration(seconds: 3));
+        Get.snackbar(
+          'Error',
+          'Please fill in all required fields',
+          duration: const Duration(seconds: 3),
+        );
         return;
       }
 
       final duration = int.tryParse(durationController.text);
       if (duration == null || duration <= 0) {
         print('Validation failed: invalid duration');
-        Get.snackbar('Error', 'Duration must be a positive number', duration: const Duration(seconds: 3));
+        Get.snackbar(
+          'Error',
+          'Duration must be a positive number',
+          duration: const Duration(seconds: 3),
+        );
         return;
       }
 
@@ -88,10 +105,18 @@ class PlanController extends GetxController {
       );
 
       Get.back();
-      Get.snackbar('Success', 'Plan created successfully', duration: const Duration(seconds: 3));
+      Get.snackbar(
+        'Success',
+        'Plan created successfully',
+        duration: const Duration(seconds: 3),
+      );
     } catch (e) {
       print('Error creating plan: $e');
-      Get.snackbar('Error', 'Failed to create plan: $e', duration: const Duration(seconds: 3));
+      Get.snackbar(
+        'Error',
+        'Failed to create plan: $e',
+        duration: const Duration(seconds: 3),
+      );
     } finally {
       isLoading.value = false;
     }
@@ -110,7 +135,11 @@ class PlanController extends GetxController {
       }
     } catch (e) {
       print('Error picking media: $e');
-      Get.snackbar('Error', 'Failed to pick media: $e', duration: const Duration(seconds: 3));
+      Get.snackbar(
+        'Error',
+        'Failed to pick media: $e',
+        duration: const Duration(seconds: 3),
+      );
     }
   }
 }

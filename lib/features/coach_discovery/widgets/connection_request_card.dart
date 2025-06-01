@@ -27,8 +27,14 @@ class ConnectionRequestCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundImage: student.profilePicture != null ? NetworkImage(student.profilePicture!) : null,
-              child: student.profilePicture == null ? const Icon(Icons.person, size: 30) : null,
+              backgroundImage:
+                  student.profilePicture != null
+                      ? NetworkImage(student.profilePicture!)
+                      : null,
+              child:
+                  student.profilePicture == null
+                      ? const Icon(Icons.person, size: 30)
+                      : null,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -42,9 +48,10 @@ class ConnectionRequestCard extends StatelessWidget {
                   Text(
                     'Status: ${status.capitalizeFirst}',
                     style: TextStyle(
-                      color: status == AppConstants.connectionStatusAccepted
-                          ? Colors.green
-                          : status == AppConstants.connectionStatusRejected
+                      color:
+                          status == AppConstants1.connectionStatusAccepted
+                              ? Colors.green
+                              : status == AppConstants1.connectionStatusRejected
                               ? Colors.red
                               : Colors.orange,
                     ),

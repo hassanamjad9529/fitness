@@ -25,8 +25,14 @@ class CoachCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundImage: coach.profilePicture != null ? NetworkImage(coach.profilePicture!) : null,
-              child: coach.profilePicture == null ? const Icon(Icons.person, size: 30) : null,
+              backgroundImage:
+                  coach.profilePicture != null
+                      ? NetworkImage(coach.profilePicture!)
+                      : null,
+              child:
+                  coach.profilePicture == null
+                      ? const Icon(Icons.person, size: 30)
+                      : null,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -54,9 +60,11 @@ class CoachCard extends StatelessWidget {
               Text(
                 connectionStatus!.capitalizeFirst!,
                 style: TextStyle(
-                  color: connectionStatus == AppConstants.connectionStatusAccepted
-                      ? Colors.green
-                      : connectionStatus == AppConstants.connectionStatusRejected
+                  color:
+                      connectionStatus == AppConstants1.connectionStatusAccepted
+                          ? Colors.green
+                          : connectionStatus ==
+                              AppConstants1.connectionStatusRejected
                           ? Colors.red
                           : Colors.orange,
                 ),

@@ -11,8 +11,10 @@ class DashboardController extends GetxController {
   final RxBool isLoading = false.obs;
   final Rx<UserModel?> user = Rx<UserModel?>(null);
   final Rx<ConnectionModel?> studentConnection = Rx<ConnectionModel?>(null);
-  final RxList<ConnectionModel> coachPendingConnections = <ConnectionModel>[].obs;
-  final RxList<ConnectionModel> coachAcceptedConnections = <ConnectionModel>[].obs;
+  final RxList<ConnectionModel> coachPendingConnections =
+      <ConnectionModel>[].obs;
+  final RxList<ConnectionModel> coachAcceptedConnections =
+      <ConnectionModel>[].obs;
   final Rx<PlanModel?> latestPlan = Rx<PlanModel?>(null);
   final Rx<UserModel?> connectedCoach = Rx<UserModel?>(null);
   final RxList<UserModel> connectedStudents = <UserModel>[].obs;
@@ -38,9 +40,9 @@ class DashboardController extends GetxController {
         Get.offAllNamed('/login');
         return;
       }
-      if (user.value!.role == AppConstants.roleStudent) {
+      if (user.value!.role == AppConstants1.roleStudent) {
         await _loadStudentData(currentUser.uid);
-      } else if (user.value!.role == AppConstants.roleCoach) {
+      } else if (user.value!.role == AppConstants1.roleCoach) {
         await _loadCoachData(currentUser.uid);
       }
     } catch (e) {
@@ -52,11 +54,16 @@ class DashboardController extends GetxController {
 
   Future<void> _loadStudentData(String studentId) async {
     try {
-      studentConnection.value = await _dashboardService.getActiveConnectionForStudent(studentId);
+      studentConnection.value = await _dashboardService
+          .getActiveConnectionForStudent(studentId);
       if (studentConnection.value != null) {
-        connectedCoach.value = await _dashboardService.getUser(studentConnection.value!.coachId);
+        connectedCoach.value = await _dashboardService.getUser(
+          studentConnection.value!.coachId,
+        );
       }
-      latestPlan.value = await _dashboardService.getLatestPlanForStudent(studentId);
+      latestPlan.value = await _dashboardService.getLatestPlanForStudent(
+        studentId,
+      );
     } catch (e) {
       Get.snackbar('Error', e.toString());
     }
@@ -64,8 +71,10 @@ class DashboardController extends GetxController {
 
   Future<void> _loadCoachData(String coachId) async {
     try {
-      coachPendingConnections.value = await _dashboardService.getPendingConnectionsForCoach(coachId);
-      coachAcceptedConnections.value = await _dashboardService.getAcceptedConnectionsForCoach(coachId);
+      coachPendingConnections.value = await _dashboardService
+          .getPendingConnectionsForCoach(coachId);
+      coachAcceptedConnections.value = await _dashboardService
+          .getAcceptedConnectionsForCoach(coachId);
       connectedStudents.clear();
       for (var connection in coachAcceptedConnections) {
         final student = await _dashboardService.getUser(connection.studentId);

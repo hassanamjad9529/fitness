@@ -10,7 +10,8 @@ class CoachDiscoveryController extends GetxController {
   final CoachDiscoveryService _service = CoachDiscoveryService();
   final RxBool isLoading = false.obs;
   final RxList<CoachProfileModel> coaches = <CoachProfileModel>[].obs;
-  final RxMap<String, ConnectionModel?> connectionStatuses = <String, ConnectionModel?>{}.obs;
+  final RxMap<String, ConnectionModel?> connectionStatuses =
+      <String, ConnectionModel?>{}.obs;
 
   @override
   void onInit() {
@@ -29,8 +30,10 @@ class CoachDiscoveryController extends GetxController {
       }
       coaches.value = await _service.getAllCoaches();
       for (var coach in coaches) {
-        connectionStatuses[coach.userId] =
-            await _service.getConnectionStatus(currentUser.uid, coach.userId);
+        connectionStatuses[coach.userId] = await _service.getConnectionStatus(
+          currentUser.uid,
+          coach.userId,
+        );
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to load coaches: $e');
@@ -53,7 +56,7 @@ class CoachDiscoveryController extends GetxController {
         id: '${currentUser.uid}_$coachId',
         studentId: currentUser.uid,
         coachId: coachId,
-        status: AppConstants.connectionStatusPending,
+        status: AppConstants1.connectionStatusPending,
         createdAt: Timestamp.now(),
       );
       Get.snackbar('Success', 'Connection request sent');

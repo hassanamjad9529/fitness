@@ -9,9 +9,6 @@ import '../models/student_profile_model.dart';
 import '../models/coach_profile_model.dart';
 import '../services/profile_service.dart';
 
-
-
-
 class ProfileController extends GetxController {
   final ProfileService _profileService = ProfileService();
   final AuthService _authService = AuthService();
@@ -101,7 +98,7 @@ class ProfileController extends GetxController {
       studentProfile.value = profile;
       Get.snackbar('Success', 'Profile created successfully');
       Get.offAllNamed(
-        user.value!.role == AppConstants.roleStudent
+        user.value!.role == AppConstants1.roleStudent
             ? '/student-home'
             : '/coach-home',
       );
@@ -147,7 +144,7 @@ class ProfileController extends GetxController {
       coachProfile.value = profile;
       Get.snackbar('Success', 'Profile created successfully');
       Get.offAllNamed(
-        user.value!.role == AppConstants.roleStudent
+        user.value!.role == AppConstants1.roleStudent
             ? '/student-home'
             : '/coach-home',
       );
@@ -242,6 +239,3 @@ class ProfileController extends GetxController {
     }
   }
 }
-
-
-
